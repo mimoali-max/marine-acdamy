@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AASTMT — Arab Academy for Science, Technology & Maritime Transport</title>
+<meta name="description" content="The Arab Academy for Science, Technology and Maritime Transport — a regional educational institution under the Arab League, founded 1972. Campuses in Alexandria, Cairo and Alamein." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Cairo:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+/* =========================================================
+   CAIRO CYBERPUNK — DESIGN TOKENS
+   ========================================================= */
+:root{
+  --bg-0:        #05060a;
+  --bg-1:        #0a0d18;
+  --bg-2:        #0f1426;
+  --panel:       rgba(13, 18, 36, 0.55);
+  --panel-2:     rgba(20, 26, 48, 0.65);
+  --border:      rgba(0, 240, 255, 0.18);
+  --border-hot:  rgba(255, 0, 110, 0.35);
+  --cyan:        #00f0ff;
+  --cyan-soft:   #5cf2ff;
+  --pink:        #ff006e;
+  --magenta:     #d100ff;
+  --gold:        #ffb800;
+  --lime:        #a3ff12;
+  --text:        #e6f0ff;
+  --text-dim:    #8b9ec2;
+  --text-mute:   #5a6b8a;
+  --glow-cyan:   0 0 12px rgba(0,240,255,.55), 0 0 32px rgba(0,240,255,.25);
+  --glow-pink:   0 0 12px rgba(255,0,110,.6),  0 0 32px rgba(255,0,110,.3);
+  --glow-gold:   0 0 10px rgba(255,184,0,.55), 0 0 28px rgba(255,184,0,.28);
+  --grad-cyber:  linear-gradient(135deg, #00f0ff 0%, #5b8cff 35%, #d100ff 70%, #ff006e 100%);
+  --grad-hot:    linear-gradient(135deg, #ff006e 0%, #ffb800 100%);
+  --grid:        linear-gradient(rgba(0,240,255,.05) 1px, transparent 1px) 0 0/40px 40px,
+                 linear-gradient(90deg, rgba(0,240,255,.05) 1px, transparent 1px) 0 0/40px 40px;
+  --font-display:'Orbitron', system-ui, sans-serif;
+  --font-body:   'Rajdhani', system-ui, sans-serif;
+  --font-ar:     'Cairo', sans-serif;
+  --font-mono:   'JetBrains Mono', monospace;
+}
+
+/* =========================================================
+   RESET & BASE
+   ========================================================= */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{
+  font-family:var(--font-body);
+  font-size:16px;line-height:1.6;
+  color:var(--text);
+  background:var(--bg-0);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  min-height:100vh;
+}
+img{max-width:100%;display:block}
+a{color:var(--cyan);text-decoration:none;transition:all .25s ease}
+a:hover{color:var(--cyan-soft);text-shadow:var(--glow-cyan)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+
+/* =========================================================
+   GLOBAL FX — noise, scan, background
+   ========================================================= */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgba(0,240,255,.18), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(255,0,110,.18), transparent 60%),
+    radial-gradient(1000px 700px at 50% 110%, rgba(209,0,255,.12), transparent 60%);
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:2;
+  background:repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0, rgba(255,255,255,.018) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode:overlay;
+  animation:scan 8s linear infinite;
+}
+@keyframes scan{ from{background-position:0 0} to{background-position:0 100vh} }
+
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+#grid-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6;
+  background:var(--grid);
+  mask-image:radial-gradient(ellipse at 50% 30%, #000 30%, transparent 75%);
+}
+
+/* =========================================================
+   TYPOGRAPHY HELPERS
+   ========================================================= */
+.mono{font-family:var(--font-mono);letter-spacing:.05em}
+.ar{font-family:var(--font-ar);direction:rtl}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:800;letter-spacing:.02em;line-height:1.15}
+.eyebrow{
+  font-family:var(--font-mono);font-size:.78rem;color:var(--cyan);
+  text-transform:uppercase;letter-spacing:.35em;display:inline-flex;align-items:center;gap:.6rem;
+}
+.eyebrow::before{content:"";width:30px;height:1px;background:var(--cyan);box-shadow:var(--glow-cyan)}
+.section-title{
+  font-size:clamp(1.9rem, 3.6vw, 3rem);
+  margin:.6rem 0 1rem;
+  background:linear-gradient(90deg, #fff 0%, var(--cyan) 50%, #fff 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 18px rgba(0,240,255,.18));
+}
+.section-sub{color:var(--text-dim);max-width:780px;font-size:1.05rem}
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+.container{width:min(1200px, 92%);margin-inline:auto;position:relative;z-index:3}
+section{position:relative;z-index:3;padding:clamp(70px, 9vw, 130px) 0}
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:14px 0;transition:.3s ease;
+  backdrop-filter:blur(8px);
+  background:rgba(5,6,10,.55);
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{background:rgba(5,6,10,.85);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.7rem;font-family:var(--font-display);font-weight:900;letter-spacing:.05em}
+.brand-mark{
+  width:42px;height:42px;border-radius:10px;
+  background:var(--grad-cyber);
+  display:grid;place-items:center;color:#05060a;font-weight:900;
+  box-shadow:var(--glow-cyan), inset 0 0 0 2px rgba(255,255,255,.18);
+  position:relative;overflow:hidden;
+}
+.brand-mark::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.4) 50%, transparent 70%);transform:translateX(-100%);animation:shine 4s ease-in-out infinite}
+@keyframes shine{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
+.brand-text{display:flex;flex-direction:column;line-height:1}
+.brand-text small{font-family:var(--font-mono);font-size:.62rem;color:var(--cyan);letter-spacing:.3em}
+.brand-text strong{font-size:1.05rem}
+.nav-links{display:flex;gap:.25rem;list-style:none}
+.nav-links a{
+  color:var(--text);font-weight:500;font-size:.95rem;padding:.55rem .9rem;border-radius:8px;
+  position:relative;letter-spacing:.04em;
+}
+.nav-links a:hover{background:rgba(0,240,255,.08);color:var(--cyan)}
+.nav-cta{
+  padding:.7rem 1.2rem;border-radius:8px;font-weight:600;letter-spacing:.06em;
+  border:1px solid var(--cyan);color:var(--cyan);position:relative;overflow:hidden;
+  transition:all .25s ease;
+}
+.nav-cta::before{content:"";position:absolute;inset:0;background:var(--cyan);transform:translateY(101%);transition:transform .3s ease;z-index:-1}
+.nav-cta:hover{color:#05060a;box-shadow:var(--glow-cyan)}
+.nav-cta:hover::before{transform:translateY(0)}
+.menu-btn{display:none;width:42px;height:42px;border-radius:8px;border:1px solid var(--border);color:var(--cyan)}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding-top:120px;padding-bottom:60px;position:relative;
+  overflow:hidden;
+}
+.hero-grid{
+  display:grid;grid-template-columns:1.15fr .85fr;gap:3rem;align-items:center;
+}
+.hero-eyebrow{margin-bottom:1.4rem}
+.hero h1{
+  font-size:clamp(2.2rem, 5.6vw, 4.6rem);
+  line-height:1.02;letter-spacing:.01em;
+  background:linear-gradient(90deg, #fff 0%, var(--cyan) 60%, var(--magenta) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 24px rgba(0,240,255,.25));
+}
+.hero h1 .accent{color:var(--gold);-webkit-text-fill-color:var(--gold);filter:drop-shadow(0 0 18px rgba(255,184,0,.4))}
+.hero h1 .blink{animation:glitch 3.5s infinite}
+@keyframes glitch{
+  0%,92%,100%{transform:translate(0,0);filter:none}
+  93%{transform:translate(-2px,1px);filter:hue-rotate(40deg)}
+  95%{transform:translate(2px,-1px);filter:hue-rotate(-40deg)}
+  97%{transform:translate(0,0);filter:none}
+}
+.hero p.lead{
+  margin:1.4rem 0 2rem;font-size:1.15rem;color:var(--text-dim);max-width:560px;
+}
+.hero-cta{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:2.4rem}
+.btn{
+  position:relative;display:inline-flex;align-items:center;gap:.6rem;
+  padding:.95rem 1.6rem;border-radius:8px;font-weight:600;letter-spacing:.06em;
+  font-family:var(--font-display);text-transform:uppercase;font-size:.85rem;
+  transition:all .25s ease;overflow:hidden;
+}
+.btn-primary{
+  background:var(--grad-cyber);color:#05060a;box-shadow:var(--glow-cyan);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 24px rgba(0,240,255,.8)}
+.btn-ghost{
+  border:1px solid var(--border);color:var(--text);background:rgba(0,240,255,.04);
+  backdrop-filter:blur(8px);
+}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:var(--glow-cyan);transform:translateY(-2px)}
+.btn .arrow{display:inline-block;transition:transform .25s ease}
+.btn:hover .arrow{transform:translateX(4px)}
+
+/* Stats */
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.stat{
+  padding:1rem 1.1rem;border:1px solid var(--border);border-radius:12px;
+  background:var(--panel);backdrop-filter:blur(8px);position:relative;overflow:hidden;
+  transition:all .3s ease;
+}
+.stat::before{content:"";position:absolute;top:0;left:0;width:2px;height:100%;background:var(--cyan);box-shadow:var(--glow-cyan)}
+.stat:hover{border-color:var(--cyan);transform:translateY(-4px)}
+.stat .num{font-family:var(--font-display);font-size:1.9rem;font-weight:900;color:#fff;line-height:1}
+.stat .lbl{font-family:var(--font-mono);font-size:.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.2em;margin-top:.4rem;display:block}
+
+/* Hero visual — terminal */
+.terminal{
+  background:linear-gradient(180deg, rgba(10,13,24,.92), rgba(5,6,10,.92));
+  border:1px solid var(--border);border-radius:14px;padding:0;
+  box-shadow:0 30px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(0,240,255,.05), var(--glow-cyan);
+  position:relative;overflow:hidden;
+}
+.terminal::before{
+  content:"";position:absolute;inset:-1px;border-radius:14px;padding:1px;
+  background:linear-gradient(135deg, var(--cyan), transparent 30%, transparent 70%, var(--pink));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.term-head{
+  display:flex;align-items:center;gap:.5rem;padding:.8rem 1rem;
+  border-bottom:1px solid var(--border);background:rgba(0,0,0,.3);
+  font-family:var(--font-mono);font-size:.78rem;color:var(--text-mute);
+}
+.term-dot{width:11px;height:11px;border-radius:50%}
+.term-dot.r{background:#ff5f57}
+.term-dot.y{background:#febc2e}
+.term-dot.g{background:#28c840}
+.term-title{margin-left:auto;margin-right:auto;padding-right:34px}
+.term-body{padding:1.2rem 1.3rem;font-family:var(--font-mono);font-size:.85rem;min-height:300px;color:#cfeaff;line-height:1.7}
+.term-body .prompt{color:var(--cyan)}
+.term-body .ok{color:var(--lime)}
+.term-body .warn{color:var(--gold)}
+.term-body .err{color:var(--pink)}
+.term-body .key{color:var(--magenta)}
+.term-cursor{display:inline-block;width:8px;height:1em;background:var(--cyan);animation:blink 1s steps(2) infinite;vertical-align:-2px}
+@keyframes blink{50%{opacity:0}}
+
+/* =========================================================
+   ABOUT / NUMBERS
+   ========================================================= */
+.about{background:linear-gradient(180deg, transparent, rgba(0,240,255,.03), transparent)}
+.numbers{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:2.5rem}
+.num-card{
+  padding:1.6rem 1.4rem;border:1px solid var(--border);border-radius:14px;
+  background:var(--panel);backdrop-filter:blur(8px);position:relative;overflow:hidden;
+  transition:all .3s ease;
+}
+.num-card:hover{border-color:var(--cyan);transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.4), var(--glow-cyan)}
+.num-card .icon{
+  width:46px;height:46px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(135deg, rgba(0,240,255,.2), rgba(209,0,255,.2));
+  color:var(--cyan);font-size:1.4rem;margin-bottom:1rem;
+  border:1px solid var(--border);
+}
+.num-card h3{font-family:var(--font-display);font-size:2rem;color:#fff;line-height:1}
+.num-card h3 sup{color:var(--cyan);font-size:1.1rem;margin-left:.2rem}
+.num-card p{color:var(--text-dim);font-size:.92rem;margin-top:.5rem}
+
+/* =========================================================
+   COLLEGES
+   ========================================================= */
+.colleges-head{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.college-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1.2rem}
+.college{
+  position:relative;padding:1.6rem;border:1px solid var(--border);border-radius:14px;
+  background:var(--panel);backdrop-filter:blur(8px);overflow:hidden;
+  transition:all .35s ease;cursor:pointer;
+}
+.college::before{
+  content:"";position:absolute;inset:0;background:linear-gradient(135deg, transparent, rgba(0,240,255,.06), transparent);
+  opacity:0;transition:opacity .35s ease;
+}
+.college:hover{border-color:var(--cyan);transform:translateY(-6px)}
+.college:hover::before{opacity:1}
+.college .code{
+  font-family:var(--font-mono);font-size:.7rem;color:var(--cyan);
+  letter-spacing:.3em;text-transform:uppercase;
+}
+.college h3{font-family:var(--font-display);font-size:1.15rem;margin:.4rem 0 .6rem;color:#fff}
+.college p{color:var(--text-dim);font-size:.92rem;position:relative;z-index:1}
+.college .arrow-link{
+  position:absolute;top:1.4rem;right:1.4rem;width:32px;height:32px;
+  border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;
+  color:var(--cyan);transition:all .3s ease;background:rgba(0,240,255,.05);
+}
+.college:hover .arrow-link{background:var(--cyan);color:#05060a;box-shadow:var(--glow-cyan);transform:rotate(-45deg)}
+.college .tags{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{
+  font-family:var(--font-mono);font-size:.68rem;padding:.25rem .55rem;border-radius:99px;
+  border:1px solid var(--border);color:var(--text-dim);background:rgba(0,240,255,.04);
+  letter-spacing:.1em;
+}
+
+/* =========================================================
+   COMPARE TABLE
+   ========================================================= */
+.compare-wrap{
+  margin-top:2.5rem;border:1px solid var(--border);border-radius:16px;overflow:hidden;
+  background:var(--panel);backdrop-filter:blur(8px);
+}
+.compare-head{
+  display:grid;grid-template-columns:1.1fr 1fr 1fr;
+  background:linear-gradient(90deg, rgba(0,240,255,.1), rgba(255,0,110,.1));
+  border-bottom:1px solid var(--border);
+}
+.compare-head > div{padding:1.2rem 1.4rem;font-family:var(--font-display);font-weight:700;letter-spacing:.04em;font-size:.95rem}
+.compare-head > div:nth-child(1){color:var(--gold)}
+.compare-head > div:nth-child(2){color:var(--cyan)}
+.compare-head > div:nth-child(3){color:var(--pink)}
+.compare-row{display:grid;grid-template-columns:1.1fr 1fr 1fr;border-bottom:1px solid rgba(0,240,255,.07);transition:background .25s ease}
+.compare-row:hover{background:rgba(0,240,255,.04)}
+.compare-row:last-child{border-bottom:0}
+.compare-row > div{padding:1rem 1.4rem;font-size:.95rem;color:var(--text-dim)}
+.compare-row .label{color:var(--text);font-weight:600;display:flex;align-items:center;gap:.5rem}
+.compare-row .label::before{content:"";width:6px;height:6px;background:var(--cyan);border-radius:50%;box-shadow:var(--glow-cyan)}
+
+/* =========================================================
+   ADMISSION FORM
+   ========================================================= */
+.admission-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:2.5rem;align-items:start;margin-top:2.5rem}
+.admission-info{padding:1.8rem;border:1px solid var(--border);border-radius:16px;background:var(--panel);backdrop-filter:blur(8px)}
+.admission-info ul{list-style:none;margin-top:1.4rem}
+.admission-info li{display:flex;gap:1rem;align-items:flex-start;padding:.9rem 0;border-top:1px solid rgba(0,240,255,.08)}
+.admission-info li:first-child{border-top:0}
+.admission-info .badge{
+  width:38px;height:38px;border-radius:10px;flex-shrink:0;
+  display:grid;place-items:center;background:linear-gradient(135deg, rgba(0,240,255,.2), rgba(255,0,110,.2));
+  color:var(--cyan);font-family:var(--font-display);font-weight:900;border:1px solid var(--border);
+}
+.admission-info .badge b{color:#fff;font-size:.95rem}
+.admission-info strong{color:#fff;display:block;margin-bottom:.2rem}
+.admission-info p{color:var(--text-dim);font-size:.9rem}
+
+.form{
+  padding:1.8rem;border:1px solid var(--border);border-radius:16px;
+  background:var(--panel-2);backdrop-filter:blur(8px);
+  position:relative;
+}
+.form::before{
+  content:"";position:absolute;inset:-1px;border-radius:16px;padding:1px;
+  background:linear-gradient(135deg, var(--cyan), transparent 30%, transparent 70%, var(--pink));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.form h3{font-family:var(--font-display);font-size:1.2rem;color:#fff;margin-bottom:.4rem}
+.form .hint{color:var(--text-dim);font-size:.9rem;margin-bottom:1.4rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.field{position:relative}
+.field label{display:block;font-family:var(--font-mono);font-size:.72rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.2em;margin-bottom:.4rem}
+.field input, .field select, .field textarea{
+  width:100%;padding:.85rem 1rem;border-radius:10px;
+  background:rgba(0,0,0,.4);border:1px solid var(--border);color:#fff;
+  font-family:var(--font-body);font-size:1rem;transition:all .25s ease;
+  outline:none;
+}
+.field input:focus, .field select:focus, .field textarea:focus{
+  border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,240,255,.12);
+}
+.field textarea{min-height:110px;resize:vertical}
+.field .err{color:var(--pink);font-size:.78rem;margin-top:.3rem;display:none;font-family:var(--font-mono)}
+.field.invalid input, .field.invalid select, .field.invalid textarea{border-color:var(--pink)}
+.field.invalid .err{display:block}
+.form-cta{width:100%;justify-content:center;margin-top:.5rem}
+.form-status{
+  margin-top:1rem;padding:1rem;border-radius:10px;font-family:var(--font-mono);font-size:.85rem;display:none;
+}
+.form-status.ok{display:block;background:rgba(163,255,18,.08);border:1px solid rgba(163,255,18,.4);color:var(--lime)}
+.form-status.fail{display:block;background:rgba(255,0,110,.08);border:1px solid rgba(255,0,110,.4);color:#ff6fa3}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+footer{padding:60px 0 30px;border-top:1px solid var(--border);background:linear-gradient(180deg, transparent, rgba(0,0,0,.4));position:relative;z-index:3}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.foot h4{font-family:var(--font-display);font-size:.95rem;color:var(--cyan);letter-spacing:.2em;text-transform:uppercase;margin-bottom:1rem}
+.foot ul{list-style:none}
+.foot li{padding:.35rem 0;color:var(--text-dim);font-size:.92rem}
+.foot a{color:var(--text-dim)}
+.foot a:hover{color:var(--cyan)}
+.foot .brand{margin-bottom:1rem}
+.foot-bottom{
+  padding-top:1.4rem;border-top:1px solid rgba(0,240,255,.1);
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;
+  color:var(--text-mute);font-size:.85rem;font-family:var(--font-mono);
+}
+.socials{display:flex;gap:.5rem}
+.socials a{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);display:grid;place-items:center;color:var(--text-dim)}
+.socials a:hover{color:var(--cyan);border-color:var(--cyan);box-shadow:var(--glow-cyan)}
+
+/* =========================================================
+   ANIMATIONS — reveal on scroll
+   ========================================================= */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease, transform .8s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:2rem}
+  .numbers{grid-template-columns:repeat(2,1fr)}
+  .admission-grid{grid-template-columns:1fr}
+  .compare-head, .compare-row{grid-template-columns:1fr 1fr 1fr;font-size:.85rem}
+  .foot{grid-template-columns:1fr 1fr}
+}
+@media (max-width:680px){
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:rgba(5,6,10,.95);backdrop-filter:blur(10px);flex-direction:column;padding:1rem;border-bottom:1px solid var(--border)}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:.9rem 1rem;border-bottom:1px solid rgba(0,240,255,.06)}
+  .menu-btn{display:grid;place-items:center}
+  .nav-cta{display:none}
+  .hero h1{font-size:2.4rem}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr}
+  .compare-head, .compare-row{grid-template-columns:1.1fr 1fr 1fr;font-size:.78rem}
+  .compare-row > div, .compare-head > div{padding:.7rem .8rem}
+  .foot{grid-template-columns:1fr}
+  .foot-bottom{flex-direction:column;text-align:center}
+}
+
+/* Selection */
+::selection{background:var(--cyan);color:#05060a}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--bg-1)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg, var(--cyan), var(--magenta));border-radius:6px}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg, var(--cyan-soft), var(--pink))}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div id="grid-bg"></div>
+
+<!-- ============== NAV ============== -->
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#top" class="brand">
+      <div class="brand-mark">A</div>
+      <div class="brand-text">
+        <small>// aastmt_system</small>
+        <strong>AASTMT</strong>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#colleges">Colleges</a></li>
+      <li><a href="#compare">Civil vs Military</a></li>
+      <li><a href="#admission">Admission</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#admission" class="nav-cta">Apply →</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ============== HERO ============== -->
+<header class="hero" id="top">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow hero-eyebrow reveal">// arab_league.regional_institution</span>
+      <h1 class="reveal">The <span class="accent">Arab Academy</span> for Science, <span class="blink">Tech</span> & Maritime Transport</h1>
+      <p class="lead reveal">Founded in 1972. A regional educational powerhouse under the League of Arab States — educating future engineers, captains, pharmacists, logisticians, and AI scientists from across the Arab world.</p>
+      <div class="hero-cta reveal">
+        <a href="#admission" class="btn btn-primary">Start Application <span class="arrow">→</span></a>
+        <a href="#colleges" class="btn btn-ghost">Explore Colleges</a>
+      </div>
+      <div class="hero-stats reveal">
+        <div class="stat"><div class="num" data-target="1972">0</div><span class="lbl">Established</span></div>
+        <div class="stat"><div class="num" data-target="3">0</div><span class="lbl">Main Campuses</span></div>
+        <div class="stat"><div class="num" data-target="22">0</div><span class="lbl">Arab Nations</span></div>
+      </div>
+    </div>
+    <div class="terminal reveal" aria-hidden="true">
+      <div class="term-head">
+        <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+        <span class="term-title">~/aastmt/boot — sh</span>
+      </div>
+      <div class="term-body" id="termBody"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============== ABOUT ============== -->
+<section id="about">
+  <div class="container">
+    <span class="eyebrow reveal">// institution.profile</span>
+    <h2 class="section-title reveal">Built on the Mediterranean. Powering the Arab World.</h2>
+    <p class="section-sub reveal">A regional organization specialized in higher education, training, scientific research, and consulting. Headquartered in Alexandria, with branches across Egypt and influence that reaches every corner of the Arab world.</p>
+    <div class="numbers">
+      <div class="num-card reveal">
+        <div class="icon">⚓</div>
+        <h3>1972<sup>★</sup></h3>
+        <p>Founded under the umbrella of the Arab League as a regional hub for maritime & technical education.</p>
+      </div>
+      <div class="num-card reveal">
+        <div class="icon">🏛️</div>
+        <h3>3<sup>+</sup></h3>
+        <p>Main campuses — Alexandria (HQ), Cairo, and Alamein — plus international affiliated centers.</p>
+      </div>
+      <div class="num-card reveal">
+        <div class="icon">🎓</div>
+        <h3>50+<sup>yrs</sup></h3>
+        <p>Graduating leaders, engineers, naval officers, and innovators recognized across the MENA region.</p>
+      </div>
+      <div class="num-card reveal">
+        <div class="icon">🌍</div>
+        <h3>22<sup>🜲</sup></h3>
+        <p>Arab League member states served by AASTMT's programs, research output, and consulting arm.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== COLLEGES ============== -->
+<section id="colleges">
+  <div class="container">
+    <div class="colleges-head">
+      <div>
+        <span class="eyebrow reveal">// academic.departments</span>
+        <h2 class="section-title reveal">Colleges & Specializations</h2>
+        <p class="section-sub reveal">From bridge simulators to AI labs — every program is engineered to meet international academic standards and real industry demand.</p>
+      </div>
+      <a href="#admission" class="btn btn-ghost reveal">Apply to a program <span class="arrow">→</span></a>
+    </div>
+    <div class="college-grid" id="collegeGrid"></div>
+  </div>
+</section>
+
+<!-- ============== COMPARE ============== -->
+<section id="compare">
+  <div class="container">
+    <span class="eyebrow reveal">// civil_vs_military.compare</span>
+    <h2 class="section-title reveal">Two paths. Two very different missions.</h2>
+    <p class="section-sub reveal">People often confuse the Arab Academy with the Egyptian Naval College. Here is the truth — same sea, completely different purpose.</p>
+    <div class="compare-wrap reveal">
+      <div class="compare-head">
+        <div>Dimension</div>
+        <div>AASTMT — Arab Academy</div>
+        <div>Naval College (Military)</div>
+      </div>
+      <div class="compare-row"><div class="label">Type</div><div>Civilian regional university</div><div>Military academy (Egyptian Armed Forces)</div></div>
+      <div class="compare-row"><div class="label">Nationality</div><div>Open to all Arab nationalities</div><div>Egyptian nationals only</div></div>
+      <div class="compare-row"><div class="label">Degrees</div><div>Internationally & locally accredited</div><div>Military officer commissioning</div></div>
+      <div class="compare-row"><div class="label">Scope</div><div>Maritime, engineering, AI, medicine, law, languages…</div><div>Solely naval officer training</div></div>
+      <div class="compare-row"><div class="label">Governance</div><div>League of Arab States</div><div>Egyptian Ministry of Defense</div></div>
+      <div class="compare-row"><div class="label">Goal</div><div>Academic & industry leaders</div><div>Active-duty naval officers</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ADMISSION ============== -->
+<section id="admission">
+  <div class="container">
+    <span class="eyebrow reveal">// admissions.terminal</span>
+    <h2 class="section-title reveal">Open the application channel</h2>
+    <p class="section-sub reveal">Submit your details below. The admissions office will reach out with the next intake's exact dates, fees, and required documents.</p>
+    <div class="admission-grid">
+      <div class="admission-info reveal">
+        <span class="eyebrow" style="color:var(--gold)">// what.happens.next</span>
+        <ul>
+          <li>
+            <div class="badge">01</div>
+            <div><strong>Review & verify</strong><p>Our admissions team checks your profile within 2–3 working days.</p></div>
+          </li>
+          <li>
+            <div class="badge">02</div>
+            <div><strong>Document submission</strong><p>Secure upload of academic transcripts and identification documents.</p></div>
+          </li>
+          <li>
+            <div class="badge">03</div>
+            <div><strong>Interview & placement</strong><p>Online interview for shortlisted candidates; college placement is finalized here.</p></div>
+          </li>
+          <li>
+            <div class="badge">04</div>
+            <div><strong>Welcome aboard</strong><p>Receive your student ID, dormitory details, and your first-semester schedule.</p></div>
+          </li>
+        </ul>
+      </div>
+      <form class="form reveal" id="applyForm" novalidate>
+        <h3>// application.signal</h3>
+        <p class="hint">All fields are required. We never share your data.</p>
+        <div class="form-row">
+          <div class="field">
+            <label for="firstName">First Name</label>
+            <input id="firstName" name="firstName" type="text" placeholder="Mohamed" required minlength="2" />
+            <div class="err">First name is required.</div>
+          </div>
+          <div class="field">
+            <label for="lastName">Last Name</label>
+            <input id="lastName" name="lastName" type="text" placeholder="Ali" required minlength="2" />
+            <div class="err">Last name is required.</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@academy.edu" required />
+            <div class="err">A valid email is required.</div>
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" placeholder="+20 1X XXX XXXX" required pattern="[0-9+\s\-]{8,}" />
+            <div class="err">A valid phone number is required.</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="country">Country</label>
+            <select id="country" name="country" required>
+              <option value="">— select —</option>
+              <option>Egypt</option><option>Saudi Arabia</option><option>UAE</option><option>Kuwait</option>
+              <option>Qatar</option><option>Bahrain</option><option>Oman</option><option>Jordan</option>
+              <option>Lebanon</option><option>Iraq</option><option>Palestine</option><option>Sudan</option>
+              <option>Libya</option><option>Tunisia</option><option>Algeria</option><option>Morocco</option>
+              <option>Mauritania</option><option>Yemen</option><option>Syria</option><option>Somalia</option>
+              <option>Comoros</option><option>Djibouti</option>
+            </select>
+            <div class="err">Please select your country.</div>
+          </div>
+          <div class="field">
+            <label for="college">Desired College</label>
+            <select id="college" name="college" required>
+              <option value="">— select —</option>
+            </select>
+            <div class="err">Please choose a college.</div>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:1rem">
+          <label for="message">Notes (optional)</label>
+          <textarea id="message" name="message" placeholder="Tell us about your goals…"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-cta">Transmit Application <span class="arrow">↑</span></button>
+        <div class="form-status" id="formStatus"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer id="contact">
+  <div class="container">
+    <div class="foot">
+      <div>
+        <div class="brand" style="margin-bottom:1rem">
+          <div class="brand-mark">A</div>
+          <div class="brand-text">
+            <small>// aastmt_system</small>
+            <strong>AASTMT</strong>
+          </div>
+        </div>
+        <p style="color:var(--text-dim);max-width:340px">Arab Academy for Science, Technology and Maritime Transport — Alexandria · Cairo · Alamein.</p>
+      </div>
+      <div>
+        <h4>// Explore</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#colleges">Colleges</a></li>
+          <li><a href="#compare">Civil vs Military</a></li>
+          <li><a href="#admission">Admission</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>// Campuses</h4>
+        <ul>
+          <li>Alexandria (HQ)</li>
+          <li>Cairo</li>
+          <li>Alamein</li>
+          <li>International affiliates</li>
+        </ul>
+      </div>
+      <div>
+        <h4>// Contact</h4>
+        <ul>
+          <li>info@aastmt.edu</li>
+          <li>+20 3 562 0000</li>
+          <li> Miami, Alexandria, Egypt</li>
+        </ul>
+        <div class="socials" style="margin-top:1rem">
+          <a href="#" aria-label="X">𝕏</a>
+          <a href="#" aria-label="Instagram">◎</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="YouTube">▶</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> AASTMT — Arab Academy for Science, Technology & Maritime Transport.</span>
+      <span class="mono">// designed_in_cairo · built_with_flask</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   PARTICLES — light network canvas
+   ========================================================= */
+(() => {
+  const c = document.getElementById('particles');
+  const ctx = c.getContext('2d');
+  let w, h, dots;
+  const DENSITY = 0.00012;
+  const MAX_DIST = 130;
+
+  const resize = () => {
+    w = c.width = innerWidth * devicePixelRatio;
+    h = c.height = innerHeight * devicePixelRatio;
+    c.style.width = innerWidth + 'px';
+    c.style.height = innerHeight + 'px';
+    const count = Math.max(40, Math.min(140, innerWidth * innerHeight * DENSITY));
+    dots = Array.from({length: count}, () => ({
+      x: Math.random()*w, y: Math.random()*h,
+      vx: (Math.random()-.5)*0.4*devicePixelRatio,
+      vy: (Math.random()-.5)*0.4*devicePixelRatio,
+      r: (Math.random()*1.4 + 0.6)*devicePixelRatio,
+      hue: Math.random() < 0.5 ? 187 : 320
+    }));
+  };
+  addEventListener('resize', resize); resize();
+
+  const tick = () => {
+    ctx.clearRect(0,0,w,h);
+    for (const d of dots) {
+      d.x += d.vx; d.y += d.vy;
+      if (d.x < 0 || d.x > w) d.vx *= -1;
+      if (d.y < 0 || d.y > h) d.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI*2);
+      ctx.fillStyle = d.hue === 187 ? 'rgba(0,240,255,0.7)' : 'rgba(255,0,110,0.55)';
+      ctx.fill();
+    }
+    for (let i=0; i<dots.length; i++){
+      for (let j=i+1; j<dots.length; j++){
+        const a = dots[i], b = dots[j];
+        const dx = a.x-b.x, dy = a.y-b.y;
+        const dist = Math.hypot(dx,dy);
+        if (dist < MAX_DIST*devicePixelRatio){
+          const o = 1 - dist/(MAX_DIST*devicePixelRatio);
+          ctx.strokeStyle = `rgba(0,240,255,${o*0.18})`;
+          ctx.lineWidth = 1*devicePixelRatio;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  };
+  tick();
+})();
+
+/* =========================================================
+   TERMINAL — boot sequence
+   ========================================================= */
+(() => {
+  const lines = [
+    ['<span class="prompt">aastmt@cairo:~$</span> <span class="key">init</span> --boot'],
+    ['<span class="ok">✔</span> Loading Arab League charter ........ <span class="ok">OK</span>'],
+    ['<span class="ok">✔</span> Mounting Alexandria campus ......... <span class="ok">ONLINE</span>'],
+    ['<span class="ok">✔</span> Mounting Cairo campus ............... <span class="ok">ONLINE</span>'],
+    ['<span class="ok">✔</span> Mounting Alamein campus ............. <span class="ok">ONLINE</span>'],
+    ['<span class="warn">›</span> Linking <span class="key">22</span> Arab League member states ...'],
+    ['<span class="ok">✔</span> Maritime simulator stack ............ <span class="ok">READY</span>'],
+    ['<span class="ok">✔</span> AI / HPC cluster .................... <span class="ok">READY</span>'],
+    ['<span class="ok">✔</span> Hospital & pharmacy network ........ <span class="ok">READY</span>'],
+    ['<span class="warn">!</span> Next intake: <span class="key">2026 / Fall</span> — opening soon.'],
+    ['<span class="prompt">aastmt@cairo:~$</span> <span class="cursor"></span>'],
+  ];
+  const out = document.getElementById('termBody');
+  let i = 0;
+  const step = () => {
+    if (i >= lines.length) return;
+    const div = document.createElement('div');
+    div.innerHTML = lines[i];
+    out.appendChild(div);
+    i++; setTimeout(step, 320);
+  };
+  step();
+})();
+
+/* =========================================================
+   NAV — scroll state, mobile menu
+   ========================================================= */
+(() => {
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 30));
+  const btn = document.getElementById('menuBtn');
+  const links = document.getElementById('navLinks');
+  btn.addEventListener('click', () => links.classList.toggle('open'));
+  links.addEventListener('click', e => { if (e.target.tagName === 'A') links.classList.remove('open'); });
+})();
+
+/* =========================================================
+   REVEAL ON SCROLL
+   ========================================================= */
+(() => {
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold: 0.12});
+  els.forEach(el => io.observe(el));
+})();
+
+/* =========================================================
+   COUNT-UP
+   ========================================================= */
+(() => {
+  const nums = document.querySelectorAll('.stat .num, .num-card h3');
+  const animate = el => {
+    const target = parseFloat(el.dataset.target || el.textContent.replace(/[^\d.]/g,'') || '0');
+    if (!target) return;
+    const dur = 1400, start = performance.now();
+    const step = now => {
+      const p = Math.min(1, (now - start)/dur);
+      const v = Math.floor(target * (1 - Math.pow(1-p,3)));
+      el.textContent = v;
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    };
+    requestAnimationFrame(step);
+  };
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { animate(e.target); io.unobserve(e.target); }
+  }), {threshold: 0.5});
+  nums.forEach(n => io.observe(n));
+})();
+
+/* =========================================================
+   COLLEGES — render from API (fallback to inline)
+   ========================================================= */
+const COLLEGES_FALLBACK = [
+  {code:'C-01', name:'Maritime Transport & Technology', desc:'Training future marine officers, marine engineers, and port operations leaders with full bridge & engine simulators.', tags:['Navigation','Marine Eng.','Ports']},
+  {code:'C-02', name:'Engineering & Technology', desc:'Mechanical, electrical, civil, architectural, and computer engineering — accredited programs with industry partnerships.', tags:['Mech.','Civil','Comp.']},
+  {code:'C-03', name:'International Transport & Logistics', desc:'Supply chains, freight forwarding, customs, and global trade — preparing the next generation of logistics leaders.', tags:['Supply','Trade','Customs']},
+  {code:'C-04', name:'Computing, AI & Information Technology', desc:'AI, data science, cybersecurity, and software engineering — built for the post-quantum era.', tags:['AI','Cybersec.','Data']},
+  {code:'C-05', name:'Management & Technology', desc:'Business administration, finance, marketing, and entrepreneurship with a regional focus.', tags:['MBA','Finance','Marketing']},
+  {code:'C-06', name:'Pharmacy & Drug Manufacturing', desc:'Modern pharmaceutical sciences with research labs and clinical training facilities.', tags:['Pharma','Research']},
+  {code:'C-07', name:'Medicine & Dentistry', desc:'AASTMT-operated hospitals and clinics supporting hands-on medical education.', tags:['MBBS','Dental']},
+  {code:'C-08', name:'Languages, Media & Law', desc:'Translation, international media, communication, and a full law faculty serving the regional market.', tags:['Law','Media','Languages']},
+];
+
+(async () => {
+  const grid = document.getElementById('collegeGrid');
+  const collegeSelect = document.getElementById('college');
+  let data = COLLEGES_FALLBACK;
+  try {
+    const res = await fetch('/api/colleges');
+    if (res.ok) {
+      const j = await res.json();
+      if (j && Array.isArray(j.colleges) && j.colleges.length) data = j.colleges;
+    }
+  } catch(_) {}
+  grid.innerHTML = data.map(c => `
+    <article class="college reveal in">
+      <div class="code">// ${c.code}</div>
+      <h3>${c.name}</h3>
+      <p>${c.desc}</p>
+      <div class="tags">${(c.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <a class="arrow-link" href="#admission" aria-label="Apply to ${c.name}">→</a>
+    </article>
+  `).join('');
+  collegeSelect.innerHTML = '<option value="">— select —</option>' + data.map(c => `<option>${c.name}</option>`).join('');
+})();
+
+/* =========================================================
+   FORM — validate + submit
+   ========================================================= */
+(() => {
+  const form = document.getElementById('applyForm');
+  const status = document.getElementById('formStatus');
+  const validate = () => {
+    let ok = true;
+    form.querySelectorAll('.field').forEach(f => {
+      const inp = f.querySelector('input,select,textarea');
+      if (!inp) return;
+      let bad = false;
+      if (inp.required && !inp.value.trim()) bad = true;
+      else if (inp.type === 'email' && inp.value && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(inp.value)) bad = true;
+      else if (inp.pattern && inp.value && !new RegExp(inp.pattern).test(inp.value)) bad = true;
+      f.classList.toggle('invalid', bad);
+      if (bad) ok = false;
+    });
+    return ok;
+  };
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    status.className = 'form-status';
+    if (!validate()) { status.textContent = '✖ Please fix the highlighted fields.'; status.classList.add('fail'); return; }
+    const payload = Object.fromEntries(new FormData(form).entries());
+    status.textContent = '› Transmitting application…'; status.className = 'form-status'; status.style.display='block';
+    try {
+      const res = await fetch('/api/admission', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+      const j = await res.json().catch(()=>({}));
+      if (!res.ok || !j.ok) throw new Error(j.error || 'Server rejected the request');
+      status.textContent = '✔ Application received. Reference: ' + j.ref + '. Admissions will contact you shortly.';
+      status.className = 'form-status ok';
+      form.reset();
+    } catch(err) {
+      status.textContent = '✖ Could not submit: ' + err.message;
+      status.className = 'form-status fail';
+    }
+  });
+})();
+
+/* Year */
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
